@@ -20,8 +20,8 @@ atlassian-ide-plugin.xml
 #Gradle
 .gradle
 
-# Maven files
-target/
+# Gradle files
+build/
 
 # Package Files #
 *.jar
