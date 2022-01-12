@@ -17,6 +17,9 @@ bin/
 *.iws
 atlassian-ide-plugin.xml
 
+#Gradle
+.gradle
+
 # Maven files
 target/
 
