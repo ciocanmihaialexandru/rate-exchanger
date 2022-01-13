@@ -17,6 +17,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.hibernate:hibernate-core:5.6.3.Final'
+	implementation 'javax.validation:validation-api'
+	testImplementation 'com.h2database:h2'
 }
 
 test {
