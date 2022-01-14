@@ -13,14 +13,24 @@ import java.util.Map;
 @ControllerAdvice
 public class ExceptionHandlerManager extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(BankAccountNotFoundException.class)
-    public ResponseEntity<Object> handleBankAccountNotFoundException(BankAccountNotFoundException ex) {
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<Object> handleBankAccountNotFoundException(ObjectNotFoundException ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleRuntimeException(Exception ex) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
