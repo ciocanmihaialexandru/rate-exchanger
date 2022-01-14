@@ -29,6 +29,6 @@ public class AccountsService implements IAccountsService {
     }
 
     private BankAccount getBankAccount(String iban) {
-        return bankAccountRepository.findByIban(iban).orElseThrow(() -> new ObjectNotFoundException(iban));
+        return bankAccountRepository.findByIban(iban).orElseThrow(() -> new ObjectNotFoundException("Bank account not found"));
     }
 }
