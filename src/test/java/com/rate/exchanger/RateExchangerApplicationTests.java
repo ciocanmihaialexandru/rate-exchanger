@@ -51,7 +51,7 @@ class RateExchangerApplicationTests {
 	void testAccountFound_ratesCached() {
 		BankAccount bankAccount = new BankAccount(3L, 0L, "RO33RZBR9238994926845257", "RON", new BigDecimal(2500), new Date());
 		bankAccountRepository.save(bankAccount);
-		ExchangeRateConfig exchangeRateConfig = new ExchangeRateConfig(1L, 0L, "http://api.exchangeratesapi.io/latest?access_key=", "40c018b15f3f3a969c8be91b043f549a", true);
+		ExchangeRateConfig exchangeRateConfig = new ExchangeRateConfig(1L, 0L, "http://api.exchangeratesapi.io/latest?access_key=", "", true);
 		exchangeRateConfigRepository.save(exchangeRateConfig);
 		rateExchangeService.getExchangedRate(bankAccount);
 		BigDecimal cachedRate = rateExchangeService.getCachedExchangeRate(bankAccount);
