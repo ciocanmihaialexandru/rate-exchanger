@@ -15,7 +15,7 @@ public class RateExchangeService {
 
     @Cacheable(cacheNames = "exchangeRate")
     public BigDecimal getCachedExchangeRate(BankAccount bankAccount) {
-        return null;
+        return new BigDecimal(Integer.MIN_VALUE);
     }
 
     @CachePut(cacheNames = "exchangeRate")
@@ -25,6 +25,6 @@ public class RateExchangeService {
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.getForObject(uri, String.class);
         BigDecimal fxRate = new BigDecimal(String.valueOf(((JSONObject) new JSONObject(result).get("rates")).get(bankAccount.getCurrency()))).setScale(6, RoundingMode.HALF_EVEN);
-        return bankAccount.getBalance().divide(fxRate, 2, RoundingMode.HALF_EVEN);
+        return fxRate;
     }
 }

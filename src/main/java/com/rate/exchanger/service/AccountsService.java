@@ -6,6 +6,7 @@ import com.rate.exchanger.repository.BankAccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 public class AccountsService implements IAccountsService {
@@ -22,10 +23,14 @@ public class AccountsService implements IAccountsService {
     public BigDecimal exchangeRate(String iban) {
         BankAccount bankAccount = getBankAccount(iban);
         BigDecimal exchangeRate = rateExchangeService.getCachedExchangeRate(bankAccount);
-        if (exchangeRate == null) {
+        if (exchangeRate.compareTo(new BigDecimal(Integer.MIN_VALUE)) == 0) {
             exchangeRate = rateExchangeService.getExchangedRate(bankAccount);
         }
-        return exchangeRate;
+        return convertAmount(bankAccount, exchangeRate);
+    }
+
+    private BigDecimal convertAmount(BankAccount bankAccount, BigDecimal rate) {
+        return bankAccount.getBalance().divide(rate, 2, RoundingMode.HALF_EVEN);
     }
 
     private BankAccount getBankAccount(String iban) {
