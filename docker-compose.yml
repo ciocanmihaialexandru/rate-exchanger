@@ -1,10 +1,27 @@
-postgres:
-  image: postgres:10.19
-  ports:
-    - '5432:5432'
-  container_name: postgres_exchange_rates
-  environment:
-    POSTGRES_USER: 'postgres'
-    POSTGRES_PASSWORD: 'postgres'
-  volumes:
-    - ./init:/docker-entrypoint-initdb.d/
+version: '2'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/rate_exchanger
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - 8080:8080
+
+  db:
+    image: postgres:10.19
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
