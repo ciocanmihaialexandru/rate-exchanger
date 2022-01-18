@@ -101,6 +101,56 @@ public CircuitBreakerConfigCustomizer externalRateServiceCircuitBreakerConfig() 
 }
 ```
 ## 6. Tests
-Tests are created to be able to check app behaviour. An H2 in memory db is used for tests.
+Tests are created to be able to check app behaviour. An H2 in memory db is used for integration tests.
+
+Unit tests will test small part of the application. Benchmark duration of unit tests vs integration tests: 70 ms vs 700 ms.
+
+###6.1 Unit tests
+For unit tests, Mockito is used to mock dependencies via constructor injection.
+```java
+    private BankAccountRepository bankAccountRepository = Mockito.mock(BankAccountRepository.class);
+    private ExchangeRateConfigRepository exchangeRateConfigRepository = Mockito.mock(ExchangeRateConfigRepository.class);
+    private RestTemplate restTemplate = Mockito.mock(RestTemplate.class);
+
+    private ExchangeRateConfigService exchangeRateConfigService;
+    private RateExchangeService rateExchangeService;
+    private AccountsService accountsService;
+
+    @BeforeEach
+    void initUseCase() {
+        accountsService = new AccountsService(bankAccountRepository, rateExchangeService);
+        exchangeRateConfigService = new ExchangeRateConfigService(exchangeRateConfigRepository);
+        rateExchangeService = new RateExchangeService(restTemplate, exchangeRateConfigService);
+    }
+```
+
+###6.2 Integration tests
+For integration purpose, field injection is used.
+```java
+@SpringBootTest
+@ActiveProfiles("test")
+class RateExchangerApplicationTests {
+
+	@Autowired
+	AccountsService accountsService;
+
+	@Autowired
+	RateExchangeService rateExchangeService;
+
+	@Autowired
+	private BankAccountRepository bankAccountRepository;
+
+	@Autowired
+	private ExchangeRateConfigRepository exchangeRateConfigRepository;
+
+	@Test
+	void testAccountNotFound() {
+		BankAccount bankAccount = new BankAccount(1L, 0L, "RO33RZBR9238994926845252", "RON", new BigDecimal(2500), new Date());
+		bankAccountRepository.save(bankAccount);
+
+		Assertions.assertThrows(ObjectNotFoundException.class, () -> accountsService.exchangeRate("RO33RZBR9238994926845250"));
+	}
+}
+```
 
 
