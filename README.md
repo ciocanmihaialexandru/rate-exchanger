@@ -153,4 +153,42 @@ class RateExchangerApplicationTests {
 }
 ```
 
+## 7. Added Dockerfile to be able to run entire app with one command.
+
+```dockerfile
+FROM openjdk:8-jdk-alpine
+ADD build/libs/exchanger-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java", "-jar","/app.jar"]
+```
+
+The app will use postgres container as database, as follows:
+```dockerfile
+version: '2'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/rate_exchanger
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - 8080:8080
+
+  db:
+    image: postgres:10.19
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
+```
 
