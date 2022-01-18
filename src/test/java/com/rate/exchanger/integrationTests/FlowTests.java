@@ -1,4 +1,4 @@
-package com.rate.exchanger;
+package com.rate.exchanger.integrationTests;
 
 import com.rate.exchanger.controller.RateExchangerController;
 import com.rate.exchanger.entity.BankAccount;

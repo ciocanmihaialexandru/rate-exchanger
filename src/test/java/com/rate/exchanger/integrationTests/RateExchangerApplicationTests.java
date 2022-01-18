@@ -1,4 +1,4 @@
-package com.rate.exchanger;
+package com.rate.exchanger.integrationTests;
 
 import com.rate.exchanger.entity.BankAccount;
 import com.rate.exchanger.entity.ExchangeRateConfig;
@@ -36,6 +36,7 @@ class RateExchangerApplicationTests {
 	void testAccountNotFound() {
 		BankAccount bankAccount = new BankAccount(1L, 0L, "RO33RZBR9238994926845252", "RON", new BigDecimal(2500), new Date());
 		bankAccountRepository.save(bankAccount);
+
 		Assertions.assertThrows(ObjectNotFoundException.class, () -> accountsService.exchangeRate("RO33RZBR9238994926845250"));
 	}
 
@@ -44,6 +45,7 @@ class RateExchangerApplicationTests {
 		BankAccount bankAccount = new BankAccount(2L, 0L, "RO33RZBR9238994926845256", "RON", new BigDecimal(2500), new Date());
 		bankAccountRepository.save(bankAccount);
 		BigDecimal cachedRate = rateExchangeService.getCachedExchangeRate(bankAccount);
+
 		Assertions.assertEquals(cachedRate, new BigDecimal(Integer.MIN_VALUE));
 	}
 
@@ -51,10 +53,11 @@ class RateExchangerApplicationTests {
 	void testAccountFound_ratesCached() {
 		BankAccount bankAccount = new BankAccount(3L, 0L, "RO33RZBR9238994926845257", "RON", new BigDecimal(2500), new Date());
 		bankAccountRepository.save(bankAccount);
-		ExchangeRateConfig exchangeRateConfig = new ExchangeRateConfig(1L, 0L, "http://api.exchangeratesapi.io/latest?access_key=", "", true);
+		ExchangeRateConfig exchangeRateConfig = new ExchangeRateConfig(1L, 0L, "http://api.exchangeratesapi.io/latest?access_key=", "key", true);
 		exchangeRateConfigRepository.save(exchangeRateConfig);
 		rateExchangeService.getExchangedRate(bankAccount);
 		BigDecimal cachedRate = rateExchangeService.getCachedExchangeRate(bankAccount);
+
 		Assertions.assertNotEquals(rateExchangeService.getCachedExchangeRate(bankAccount), new BigDecimal(Integer.MIN_VALUE));
 		Assertions.assertTrue(cachedRate.compareTo(new BigDecimal(4)) > 0 && cachedRate.compareTo(new BigDecimal(6)) < 0);
 	}
