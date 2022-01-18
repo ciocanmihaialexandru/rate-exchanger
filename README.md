@@ -105,7 +105,7 @@ Tests are created to be able to check app behaviour. An H2 in memory db is used 
 
 Unit tests will test small part of the application. Benchmark duration of unit tests vs integration tests: 70 ms vs 700 ms.
 
-###6.1 Unit tests
+### 6.1 Unit tests
 For unit tests, Mockito is used to mock dependencies via constructor injection.
 ```java
     private BankAccountRepository bankAccountRepository = Mockito.mock(BankAccountRepository.class);
@@ -124,7 +124,7 @@ For unit tests, Mockito is used to mock dependencies via constructor injection.
     }
 ```
 
-###6.2 Integration tests
+### 6.2 Integration tests
 For integration purpose, field injection is used.
 ```java
 @SpringBootTest
